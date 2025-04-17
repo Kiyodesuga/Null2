@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>NULL² Demo</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+    .flow-text {
+      position: absolute;
+      white-space: nowrap;
+      font-size: 24px;
+      animation: flow 20s linear infinite;
+    }
+    @keyframes flow {
+      0% { left: 100%; top: 30%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: -100%; top: 60%; opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="flow-text" style="animation-delay: 0s;">これは NULL² の思考の粒子</div>
+  <div class="flow-text" style="animation-delay: 5s;">近づく文字は見られた痕跡</div>
+  <div class="flow-text" style="animation-delay: 10s;">他者から見えた波動が遅れて揺れる</div>
+  <div class="flow-text" style="animation-delay: 15s;">あなたが今、ここにいる</div>
+</body>
+</html>
