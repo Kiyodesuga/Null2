@@ -1,0 +1,1 @@
+// Flutterでビルドされたmain.dart.js（ダミー）
