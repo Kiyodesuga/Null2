@@ -1,13 +1,16 @@
-# NULL² full source demo
+# NULL² Flutter Web Demo
 
-This is a minimal Flutter Web project representing NULL² v1.
+This project integrates a SidePanel with navigation to:
+- Profile
+- Thought Log (placeholder)
+- Wave Graph (placeholder)
+- Settings
 
-## Build
-```
+## Build & Deploy
+
+```bash
+flutter pub get
 flutter build web --release --web-renderer html
 ```
-Generated output will be in `build/web/`.
 
-## Deploy to Vercel
-- Make sure `vercel.json` is at project root.
-- On Vercel: Framework = Other, Output Directory = build/web
+Push to GitHub, Vercel will auto-deploy using `vercel.json`.

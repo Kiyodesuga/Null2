@@ -1,33 +1,35 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'widgets/side_panel.dart';
+import 'screens/profile_screen.dart';
+import 'screens/settings_screen.dart';
 
 void main() => runApp(const Null2App());
 
 class Null2App extends StatelessWidget {
-  const Null2App({super.key});
+  const Null2App({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Null2Home(),
+      home: Scaffold(body: SidePanel(child: RiverScene())),
+      theme: ThemeData.dark(),
     );
   }
 }
 
-class Null2Home extends StatefulWidget {
-  const Null2Home({super.key});
+class RiverScene extends StatefulWidget {
+  const RiverScene({Key? key}) : super(key: key);
   @override
-  State<Null2Home> createState() => _Null2HomeState();
+  State<RiverScene> createState() => _RiverSceneState();
 }
 
-class _Null2HomeState extends State<Null2Home> with SingleTickerProviderStateMixin {
+class _RiverSceneState extends State<RiverScene> with SingleTickerProviderStateMixin {
   final List<String> thoughts = [
     'これは NULL² の思考',
-    'あなたが今 ここにいる',
+    'あなたが今ここにいる',
     '揺れるだけの粒子',
-    '意味以前の兆し'
+    '意味以前の兆し',
   ];
-  final Random rnd = Random();
   late final AnimationController _ctrl;
 
   @override
@@ -45,37 +47,35 @@ class _Null2HomeState extends State<Null2Home> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: AnimatedBuilder(
-        animation: _ctrl,
-        builder: (context, _) {
-          return Stack(
-            children: List.generate(thoughts.length, (i) {
-              double progress = (_ctrl.value + i * 0.25) % 1.0;
-              double top = MediaQuery.of(context).size.height * progress - 50;
-              double sway = sin((_ctrl.value + i) * 2 * pi) * 20;
-              return Positioned(
-                top: top,
-                left: 40 + sway,
-                child: Opacity(
-                  opacity: 0.8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white24, width: 0.8),
-                    ),
-                    child: Text(
-                      thoughts[i],
-                      style: const TextStyle(color: Colors.white, fontSize: 22),
-                    ),
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, _) {
+        final size = MediaQuery.of(context).size;
+        return Stack(
+          children: List.generate(thoughts.length, (i) {
+            final progress = (_ctrl.value + i * 0.25) % 1.0;
+            final top = size.height * progress - 50;
+            final sway = 40 + 20 * (i % 2 == 0 ? 1 : -1) * (_ctrl.value);
+            return Positioned(
+              top: top,
+              left: sway + 408, // offset for panel mask
+              child: Opacity(
+                opacity: 0.8,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.white24, width: 0.8),
+                  ),
+                  child: Text(
+                    thoughts[i],
+                    style: const TextStyle(color: Colors.white, fontSize: 22),
                   ),
                 ),
-              );
-            }),
-          );
-        },
-      ),
+              ),
+            );
+          }),
+        );
+      },
     );
   }
 }
