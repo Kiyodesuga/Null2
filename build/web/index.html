@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>NULL² sidebar demo v5</title>
+  <title>NULL² sidebar demo v6</title>
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <style>
     body{margin:0;background:#000;color:#fff;font-family:sans-serif;overflow:hidden;}
@@ -11,8 +11,8 @@
     /* sidebar */
     #panel{
       position:fixed;top:0;left:0;height:100vh;width:0;
-      background:#000;               /* fully opaque to mask river */
-      overflow:hidden;border-right:1px solid rgba(255,255,255,.08);
+      background:#000;overflow:hidden;
+      border-right:1px solid rgba(255,255,255,.08);
       transition:width .45s cubic-bezier(.25,.1,.25,1);
       z-index:20;
     }
@@ -26,19 +26,19 @@
     }
     #toggleBtn::after{content:"≡";font-size:20px;color:#fff;}
 
-    /* click overlay to close */
+    /* overlay */
     #overlay{
       display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:15;
     }
     #overlay.active{display:block;}
 
-    /* menu items */
+    /* menu */
     .item{display:flex;align-items:center;padding:14px 20px;cursor:pointer;}
     .item span{margin-left:10px;opacity:.7}
     .item:hover span{opacity:1;}
 
-    /* river text */
-    #river{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;}
+    /* river */
+    #river{position:absolute;top:0;bottom:0;right:0;left:0;pointer-events:none;transition:left .45s cubic-bezier(.25,.1,.25,1);}
     #river .t{position:absolute;white-space:nowrap;animation:flow 22s linear infinite;
       opacity:.9;font-size:24px;}
     @keyframes flow{0%{top:-10%;left:5%}100%{top:110%;left:5%}}
@@ -54,22 +54,26 @@
   </div>
   <div id="overlay"></div>
 
-  <div id="river"><div class="t">NULL² – sidebar v5 (2025-04-18)</div></div>
+  <div id="river"><div class="t">NULL² – sidebar v6 (2025-04-18)</div></div>
 
   <script>
     const panel   = document.getElementById('panel');
     const btn     = document.getElementById('toggleBtn');
     const overlay = document.getElementById('overlay');
+    const river   = document.getElementById('river');
+    const WALL = 408;   // wall width
 
     function openPanel() {
       panel.classList.add('open');
       overlay.classList.add('active');
       btn.style.display='none';
+      river.style.left = WALL + 'px';
     }
     function closePanel() {
       panel.classList.remove('open');
       overlay.classList.remove('active');
       btn.style.display='flex';
+      river.style.left = '0px';
     }
 
     btn.addEventListener('click', openPanel);
