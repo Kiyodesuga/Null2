@@ -11,7 +11,6 @@ class SidePanel extends StatefulWidget {
 }
 
 class _SidePanelState extends State<SidePanel> with SingleTickerProviderStateMixin {
-  static const double collapsedWidth = 0;
   static const double expandedWidth = 408;
   late final AnimationController _ctrl = AnimationController(
     vsync: this,
@@ -23,89 +22,76 @@ class _SidePanelState extends State<SidePanel> with SingleTickerProviderStateMix
   void open() => _ctrl.forward();
   void close() => _ctrl.reverse();
 
+  void _navigate(Widget screen) {
+    close();
+    Future.delayed(const Duration(milliseconds: 450), () {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Main content shifted
-        AnimatedBuilder(
+    return Stack(children: [
+      AnimatedBuilder(
+        animation: _ctrl,
+        builder: (_, __) {
+          final panelWidth = Tween<double>(begin: 0, end: expandedWidth)
+              .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
+          return Positioned(
+            left: panelWidth.value,
+            top: 0, bottom: 0, right: 0,
+            child: widget.child,
+          );
+        },
+      ),
+      Positioned(
+        left: 0, top: 0, bottom: 0,
+        child: AnimatedBuilder(
           animation: _ctrl,
           builder: (_, __) {
-            final panelWidth = Tween<double>(
-              begin: collapsedWidth, end: expandedWidth,
-            ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
-            return Positioned(
-              left: panelWidth.value,
-              top: 0, bottom: 0, right: 0,
-              child: widget.child,
+            final w = Tween<double>(begin: 0, end: expandedWidth)
+                .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic)).value;
+            return Container(
+              width: w, color: Colors.black,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const SizedBox(height: 24),
+                _menuButton('Profile', Icons.person, () => _navigate(const ProfileScreen())),
+                _menuButton('Thought Log', Icons.history, () => close()),
+                _menuButton('Wave Graph', Icons.show_chart, () => close()),
+                _menuButton('Settings', Icons.settings, () => _navigate(const SettingsScreen())),
+              ]),
             );
           },
         ),
-        // Sidebar
-        Positioned(
-          left: 0, top: 0, bottom: 0,
-          child: AnimatedBuilder(
-            animation: _ctrl,
-            builder: (_, __) {
-              final w = Tween<double>(begin: 0, end: expandedWidth)
-                  .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic)).value;
-              return Container(
-                width: w, color: Colors.black,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
-                    _menuButton(context, 'Profile', Icons.person, () {
-                      close();
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen()));
-                    }),
-                    _menuButton(context, 'Thought Log', Icons.history, () {
-                      close();
-                    }),
-                    _menuButton(context, 'Wave Graph', Icons.show_chart, () {
-                      close();
-                    }),
-                    _menuButton(context, 'Settings', Icons.settings, () {
-                      close();
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()));
-                    }),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-        // Toggle button
-        Positioned(
-          left: 16, top: 16,
-          child: isOpen
-              ? const SizedBox.shrink()
-              : GestureDetector(
-                  onTap: open,
-                  child: Container(
-                    width: 40, height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.black, borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white24),
-                    ),
-                    alignment: Alignment.center,
-                    child: const Text('☰', style: TextStyle(color: Colors.white, fontSize: 20)),
+      ),
+      Positioned(
+        left: 16, top: 16,
+        child: isOpen
+            ? const SizedBox.shrink()
+            : GestureDetector(
+                onTap: open,
+                child: Container(
+                  width: 40, height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.black, borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white24),
                   ),
+                  alignment: Alignment.center,
+                  child: const Text('☰', style: TextStyle(color: Colors.white, fontSize: 20)),
                 ),
-        ),
-        // Overlay to close
-        if (isOpen)
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: close,
-              child: Container(color: Colors.transparent),
-            ),
+              ),
+      ),
+      if (isOpen)
+        Positioned.fill(
+          child: GestureDetector(
+            onTap: close,
+            child: Container(color: Colors.transparent),
           ),
-      ],
-    );
+        ),
+    ]);
   }
 
-  Widget _menuButton(BuildContext ctx, String label, IconData icon, VoidCallback onTap) {
+  Widget _menuButton(String label, IconData icon, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Padding(
