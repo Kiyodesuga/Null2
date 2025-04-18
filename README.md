@@ -1,10 +1,10 @@
 # NULL² Flutter Web Demo
 
 This project integrates a SidePanel with navigation to:
-- Profile
+- Profile (view-only)
 - Thought Log (placeholder)
 - Wave Graph (placeholder)
-- Settings
+- Settings (profile edit)
 
 ## Build & Deploy
 

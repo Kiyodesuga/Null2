@@ -32,8 +32,6 @@ class ProfileScreen extends StatelessWidget {
           _buildField('Location', 'Add location', () {/* TODO */}),
           _buildField('Web', 'Add website', () {/* TODO */}),
           _buildField('Birthday', '2004/02/24', () {/* TODO */}),
-          _buildField('Pro Plan', 'Upgrade to Pro', () {/* TODO */}),
-          _buildField('Extended Profile', 'Edit Extended Profile', () {/* TODO */}),
         ]),
       ),
     );

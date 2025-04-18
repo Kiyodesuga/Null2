@@ -61,11 +61,9 @@ class _SidePanelState extends State<SidePanel> with SingleTickerProviderStateMix
                     }),
                     _menuButton(context, 'Thought Log', Icons.history, () {
                       close();
-                      // TODO: push Thought Log screen
                     }),
                     _menuButton(context, 'Wave Graph', Icons.show_chart, () {
                       close();
-                      // TODO: push Wave Graph screen
                     }),
                     _menuButton(context, 'Settings', Icons.settings, () {
                       close();
