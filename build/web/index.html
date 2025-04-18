@@ -1,15 +1,87 @@
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>NULL² v1</title>
+  <title>NULL² sidebar demo v5</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <style>
     body{margin:0;background:#000;color:#fff;font-family:sans-serif;overflow:hidden;}
-    .t{position:absolute;animation:flow 20s linear infinite;white-space:nowrap;font-size:24px;opacity:.9;}
+
+    /* sidebar */
+    #panel{
+      position:fixed;top:0;left:0;height:100vh;width:0;
+      background:#000;               /* fully opaque to mask river */
+      overflow:hidden;border-right:1px solid rgba(255,255,255,.08);
+      transition:width .45s cubic-bezier(.25,.1,.25,1);
+      z-index:20;
+    }
+    #panel.open{width:408px;}
+
+    /* toggle button */
+    #toggleBtn{
+      position:fixed;top:16px;left:16px;width:40px;height:40px;border-radius:50%;
+      background:#111;display:flex;align-items:center;justify-content:center;
+      border:1px solid rgba(255,255,255,.3);cursor:pointer;z-index:30;
+    }
+    #toggleBtn::after{content:"≡";font-size:20px;color:#fff;}
+
+    /* click overlay to close */
+    #overlay{
+      display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:15;
+    }
+    #overlay.active{display:block;}
+
+    /* menu items */
+    .item{display:flex;align-items:center;padding:14px 20px;cursor:pointer;}
+    .item span{margin-left:10px;opacity:.7}
+    .item:hover span{opacity:1;}
+
+    /* river text */
+    #river{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;}
+    #river .t{position:absolute;white-space:nowrap;animation:flow 22s linear infinite;
+      opacity:.9;font-size:24px;}
     @keyframes flow{0%{top:-10%;left:5%}100%{top:110%;left:5%}}
   </style>
 </head>
 <body>
-  <div class="t">NULL² – floating thought demo (2025-04-18)</div>
+  <div id="toggleBtn"></div>
+  <div id="panel">
+    <div class="item"><span>Profile</span></div>
+    <div class="item"><span>Thought Log</span></div>
+    <div class="item"><span>Wave Graph</span></div>
+    <div class="item"><span>Settings</span></div>
+  </div>
+  <div id="overlay"></div>
+
+  <div id="river"><div class="t">NULL² – sidebar v5 (2025-04-18)</div></div>
+
+  <script>
+    const panel   = document.getElementById('panel');
+    const btn     = document.getElementById('toggleBtn');
+    const overlay = document.getElementById('overlay');
+
+    function openPanel() {
+      panel.classList.add('open');
+      overlay.classList.add('active');
+      btn.style.display='none';
+    }
+    function closePanel() {
+      panel.classList.remove('open');
+      overlay.classList.remove('active');
+      btn.style.display='flex';
+    }
+
+    btn.addEventListener('click', openPanel);
+    overlay.addEventListener('click', closePanel);
+
+    /* mobile swipe open */
+    let startX=null;
+    document.addEventListener('touchstart',e=>{if(e.touches[0].clientX<30) startX=e.touches[0].clientX;});
+    document.addEventListener('touchend',e=>{
+      if(startX!==null && e.changedTouches[0].clientX-startX>40) openPanel();
+      startX=null;
+    });
+  </script>
 </body>
 </html>
