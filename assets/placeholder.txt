@@ -1,1 +1,0 @@
-Replace with actual assets from build/web/assets
